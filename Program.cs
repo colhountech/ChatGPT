@@ -17,7 +17,12 @@ public class Program
 
             string line = Console.ReadLine();
 
-            var response = await client.SendRequest(line, "text-davinci-002", maxTokens:128, echo: true);
+
+
+
+            //var response = await client.SendRequest(line, "text-davinci-002", maxTokens:2048, echo: false);
+            var response = await client.SendRequest(line, "gpt-3.5-turbo", maxTokens:4096, echo: false);
+            
 
             var formattedJson = JsonSerializer.Serialize(response, options: new JsonSerializerOptions { WriteIndented = true });
 
@@ -37,7 +42,15 @@ public class Program
                 foreach (var choice in response.choices)
                 {
                     Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine(choice.text);
+                    if (choice.text is string )
+                    {
+                        Console.WriteLine(choice.text);
+                    }
+                    if (choice.message is Message msg)
+                    {
+                        Console.WriteLine($"{msg.role} {msg.content}");
+                    }
+
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine(choice.finish_reason);
 
